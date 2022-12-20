@@ -25,9 +25,19 @@ namespace ProjectNokia.Controllers
         }
 
         // GET: Tickets
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pg=1)
         {
-              return View(await _context.Tickets.ToListAsync());
+            //return View(await _context.Tickets.ToListAsync());
+            List<Ticket> tickets = _context.Tickets.ToList();
+            const int pageSize = 5;
+            if (pg < 1)
+                pg=1;
+            int recsCount = tickets.Count();
+            var pager = new Pager(recsCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+            var data = tickets.Skip(recSkip).Take(pager.PageSize).ToList();
+            this.ViewBag.Pager = pager;
+            return View(data);
         }
 
         // GET: Tickets/Details/5
@@ -68,36 +78,7 @@ namespace ProjectNokia.Controllers
                 ticket.Reporter = name;
                 ticket.CreatedDate = DateTime.Now;
                 ticket.State = "To Do";
-
-                //assign ticket to userid
-                //first check the name of the assigne to 
                 var _db = new ApplicationDbContext();
-
-                //IQueryable<AppUser> query = _db.AppUsers.AsQueryable(); // from IdentityDbContext
-                //if (ticket.Reporter == ticket.Assigne)
-                //{
-                //    var query =
-                //        from AppUser in _db.Users
-                //        where AppUser.UserName == name
-                //        select AppUser;
-                //    foreach (var item in query)
-                //    {
-                //        ticket.AppUserId = item.Id;
-                //    }
-                //}
-                //else
-                //{
-                //    var querySecond =
-                //    from AppUser in _db.Users
-                //    where AppUser.UserName == ticket.Reporter
-                //    select AppUser;
-                //    foreach (var item in querySecond)
-                //    {
-                //        ticket.AppUserId = item.Id;
-                //    }
-                //}
-                // search for matching user
-
                 var query =
                     from AppUser in _db.Users
                     select AppUser;
