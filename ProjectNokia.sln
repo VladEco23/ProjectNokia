@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32519.379
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectNokia", "ProjectNokia\ProjectNokia.csproj", "{31CA2FB4-EA6D-4EAB-AE37-A79DB021B442}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{31CA2FB4-EA6D-4EAB-AE37-A79DB021B442}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31CA2FB4-EA6D-4EAB-AE37-A79DB021B442}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31CA2FB4-EA6D-4EAB-AE37-A79DB021B442}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31CA2FB4-EA6D-4EAB-AE37-A79DB021B442}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {60A9255A-3A27-4118-9A3A-AE82840FEB4A}
+	EndGlobalSection
+EndGlobal
