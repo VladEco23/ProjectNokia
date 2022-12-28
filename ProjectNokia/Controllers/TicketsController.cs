@@ -18,17 +18,57 @@ namespace ProjectNokia.Controllers
     public class TicketsController : Controller
     {
         private readonly ApplicationDbContext _context;
-
+        //public IQueryable<Ticket> PopulateNameDropDownList()
+        //{
+            
+        //    var tickets = _context.Tickets.AsQueryable();
+        //    List<string> list = new List<string>();
+        //    foreach(var ticket in tickets)
+        //    {
+        //        list.Append(ticket.Assigne);
+        //    }
+        //    return (IQueryable<Ticket>)list.AsQueryable();
+        //}
         public TicketsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
         // GET: Tickets
-        public async Task<IActionResult> Index(int pg=1)
+        public async Task<IActionResult> Index(string? SearchString,string? SelectAssigne,DateTime? startdate,DateTime? enddate,string SelectStatus,string SelectPriority,int pg=1)
         {
             //return View(await _context.Tickets.ToListAsync());
-            List<Ticket> tickets = _context.Tickets.ToList();
+
+            var tickets = from t in _context.Tickets
+                          select t;
+            if (!String.IsNullOrEmpty(SearchString))
+            {
+                tickets = tickets.Where(t=>t.Title.Contains(SearchString) || t.Description.Contains(SearchString));
+            }
+            if (startdate != null && enddate == null)
+            {
+                tickets = tickets.Where(t => t.CreatedDate >= startdate);
+            }
+            else if (startdate != null && enddate != null)
+            {
+                tickets = tickets.Where(t => t.CreatedDate >= startdate && t.LimitDate <= enddate);
+            }
+            else if (startdate == null && enddate != null)
+            {
+                tickets = tickets.Where(t => t.LimitDate <= enddate);
+            }
+            if(!String.IsNullOrEmpty(SelectStatus))
+            {
+                tickets = tickets.Where(t => t.State == SelectStatus);
+            }
+            if (!String.IsNullOrEmpty(SelectPriority))
+            {
+                tickets = tickets.Where(t => t.Priority == SelectPriority);
+            }
+            if (!String.IsNullOrEmpty(SelectAssigne))
+            {
+                tickets = tickets.Where(t => t.Assigne == SelectAssigne);
+            }
             const int pageSize = 5;
             if (pg < 1)
                 pg=1;
