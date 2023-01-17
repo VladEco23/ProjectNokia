@@ -230,6 +230,32 @@ namespace ProjectNokia.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ProjectNokia.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Commentator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TicketId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TicketId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("ProjectNokia.Models.Ticket", b =>
                 {
                     b.Property<int>("Id")
@@ -332,6 +358,17 @@ namespace ProjectNokia.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ProjectNokia.Models.Comment", b =>
+                {
+                    b.HasOne("ProjectNokia.Models.Ticket", "Ticket")
+                        .WithMany("Comments")
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ticket");
+                });
+
             modelBuilder.Entity("ProjectNokia.Models.Ticket", b =>
                 {
                     b.HasOne("ProjectNokia.Models.AppUser", "AppUser")
@@ -339,6 +376,11 @@ namespace ProjectNokia.Data.Migrations
                         .HasForeignKey("AppUserId");
 
                     b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("ProjectNokia.Models.Ticket", b =>
+                {
+                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("ProjectNokia.Models.AppUser", b =>

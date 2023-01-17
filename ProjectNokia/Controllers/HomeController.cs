@@ -10,6 +10,7 @@ namespace ProjectNokia.Controllers
 
         public HomeController(ILogger<HomeController> logger)
         {
+     
             _logger = logger;
         }
 
@@ -18,6 +19,8 @@ namespace ProjectNokia.Controllers
             return View();
         }
 
+       
+ 
         public IActionResult Privacy()
         {
             return View();

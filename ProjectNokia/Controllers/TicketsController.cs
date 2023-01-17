@@ -12,23 +12,82 @@ using Microsoft.EntityFrameworkCore;
 using ProjectNokia.Data;
 using ProjectNokia.Models;
 using RestSharp;
+using System.Web;
+using PusherServer;
 
 namespace ProjectNokia.Controllers
 {
     public class TicketsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        //{
+            
+        //    var tickets = _context.Tickets.AsQueryable();
+        //    List<string> list = new List<string>();
+        //    foreach(var ticket in tickets)
+        //    {
+        [Authorize]
+        public async Task<IActionResult> Index(string? SearchString,string? SelectAssigne,DateTime? startdate,DateTime? enddate,string SelectStatus,string SelectPriority,int pg=1)
+        //    }
 
-        public TicketsController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
-        // GET: Tickets
-        public async Task<IActionResult> Index(int pg=1)
-        {
-            //return View(await _context.Tickets.ToListAsync());
-            List<Ticket> tickets = _context.Tickets.ToList();
+            var tickets = from t in _context.Tickets
+                          select t;
+            if (!String.IsNullOrEmpty(SearchString))
+            {
+                tickets = tickets.Where(t=>t.Title.Contains(SearchString) || t.Description.Contains(SearchString));
+            }
+            if (startdate != null && enddate == null)
+            {
+                tickets = tickets.Where(t => DateTime.Compare((DateTime)startdate,t.CreatedDate) <= 0 );
+            }
+            else if (startdate != null && enddate != null)
+            {
+                tickets = tickets.Where(t => DateTime.Compare((DateTime)startdate, t.CreatedDate) <= 0 && DateTime.Compare(t.LimitDate, (DateTime)enddate) <= 0);
+            }
+            else if (startdate == null && enddate != null)
+            {
+                tickets = tickets.Where(t => DateTime.Compare(t.LimitDate, (DateTime)enddate) <= 0  && DateTime.Compare(t.CreatedDate, DateTime.Now) <= 0);
+            }
+            if(!String.IsNullOrEmpty(SelectStatus))
+            {
+                tickets = tickets.Where(t => t.State == SelectStatus);
+            }
+            if (!String.IsNullOrEmpty(SelectPriority))
+            {
+                tickets = tickets.Where(t => t.Priority == SelectPriority);
+            }
+            if (!String.IsNullOrEmpty(SelectAssigne))
+            {
+                tickets = tickets.Where(t => t.Assigne == SelectAssigne);
+            }
+            }
+            }
+            }
+            }
+            }
+            }
+            {
+                tickets = tickets.Where(t => t.State == SelectStatus);
+            }
+            if (!String.IsNullOrEmpty(SelectPriority))
+            {
+                tickets = tickets.Where(t => t.Priority == SelectPriority);
+            }
+            if (!String.IsNullOrEmpty(SelectAssigne))
+            {
+                tickets = tickets.Where(t => t.Assigne == SelectAssigne);
+            }
+            {
+                tickets = tickets.Where(t => t.State == SelectStatus);
+            }
+            if (!String.IsNullOrEmpty(SelectPriority))
+            {
+                tickets = tickets.Where(t => t.Priority == SelectPriority);
+            }
+            if (!String.IsNullOrEmpty(SelectAssigne))
+            {
+                tickets = tickets.Where(t => t.Assigne == SelectAssigne);
+            }
             const int pageSize = 5;
             if (pg < 1)
                 pg=1;
@@ -42,6 +101,7 @@ namespace ProjectNokia.Controllers
 
         // GET: Tickets/Details/5
         // aici fac query la tabela de commenturi in momentul in care se face click pe detalii
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Tickets == null)
@@ -59,7 +119,18 @@ namespace ProjectNokia.Controllers
             return View(ticket);
         }
 
+        public JsonResult Graph()
+        {
+            var tickets = from t in _context.Tickets
+                          select t;
+            return Json(tickets);
+        }
+
+
+
+
         // GET: Tickets/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -68,6 +139,7 @@ namespace ProjectNokia.Controllers
         // POST: Tickets/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Description,LimitDate,Priority,Reporter,Assigne")] Ticket ticket)
@@ -127,6 +199,7 @@ namespace ProjectNokia.Controllers
         }
 
         // GET: Tickets/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Tickets == null)
@@ -145,6 +218,7 @@ namespace ProjectNokia.Controllers
         // POST: Tickets/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,CreatedDate,LimitDate,State,Description,Priority,Reporter,Assigne")] Ticket ticket)
@@ -178,6 +252,7 @@ namespace ProjectNokia.Controllers
         }
 
         // GET: Tickets/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Tickets == null)
@@ -196,6 +271,7 @@ namespace ProjectNokia.Controllers
         }
 
         // POST: Tickets/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

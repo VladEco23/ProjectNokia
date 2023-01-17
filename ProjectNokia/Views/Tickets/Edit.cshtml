@@ -30,7 +30,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="State" class="control-label"></label>
-                <input asp-for="State" class="form-control" />
+                <datalist id="states" asp-for="State">
+                    <option value="ToDo"/>
+                    <option value="InProgress"/>
+                    <option value="Done"/>
+                </datalist>
+                <input list="states" asp-for="State" class="form-control" />
                 <span asp-validation-for="State" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -38,9 +43,14 @@
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            <div class="form-group">
+             <div class="form-group">
                 <label asp-for="Priority" class="control-label"></label>
-                <input asp-for="Priority" class="form-control" />
+                <datalist id="priorities" asp-for="Priority">
+                    <option value="Low"/>
+                    <option value="Medium"/>
+                    <option value="High"/>
+                </datalist>
+                <input list="priorities" asp-for="Priority" class="form-control" />
                 <span asp-validation-for="Priority" class="text-danger"></span>
             </div>
             <div class="form-group">
